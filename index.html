@@ -466,39 +466,32 @@ button1:hover {
           <script>
 
 const input = document.querySelector('input[type="text"]');
-const button = document.querySelector('button');
-const messages = document.querySelector('.messages');
+  const button = document.querySelector('button');
+  const messages = document.querySelector('.messages');
 
-const socket = io();
+  button.addEventListener('click', sendMessage);
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent form submission
+      sendMessage();
+    }
+  });
 
-socket.on('message', (data) => {
-  const newMessage = document.createElement('div');
-  newMessage.classList.add('message');
-  newMessage.textContent = data.message;
-  messages.appendChild(newMessage);
-});
+  function sendMessage() {
+    const message = input.value.trim();
 
-button.addEventListener('click', sendMessage);
-input.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
-    sendMessage();
+    if (message.length) {
+      const newMessage = document.createElement('div');
+      newMessage.classList.add('message');
+      newMessage.textContent = message;
+      messages.appendChild(newMessage);
+      input.value = '';
+    }
   }
-});
-
-function sendMessage() {
-  const message = input.value.trim();
-
-  if (message.length) {
-    const data = { message: message };
-    socket.emit('message', data);
-
-    const newMessage = document.createElement('div');
-    newMessage.classList.add('message');
-    newMessage.textContent = message;
-    messages.appendChild(newMessage);
-    input.value = '';
-  }
-}
+  
+  // Listen for input events and send the message to the server
+  input.addEventListener('input', sendMessage);
+  button.addEventListener('click', sendMessage);
 
               const Signin = document.querySelector('.Signin');
               
