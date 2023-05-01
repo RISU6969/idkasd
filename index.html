@@ -469,6 +469,15 @@ const input = document.querySelector('input[type="text"]');
 const button = document.querySelector('button');
 const messages = document.querySelector('.messages');
 
+const socket = io();
+
+socket.on('message', (data) => {
+  const newMessage = document.createElement('div');
+  newMessage.classList.add('message');
+  newMessage.textContent = data.message;
+  messages.appendChild(newMessage);
+});
+
 button.addEventListener('click', sendMessage);
 input.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
@@ -480,6 +489,9 @@ function sendMessage() {
   const message = input.value.trim();
 
   if (message.length) {
+    const data = { message: message };
+    socket.emit('message', data);
+
     const newMessage = document.createElement('div');
     newMessage.classList.add('message');
     newMessage.textContent = message;
@@ -488,7 +500,6 @@ function sendMessage() {
   }
 }
 
-  
               const Signin = document.querySelector('.Signin');
               
               
