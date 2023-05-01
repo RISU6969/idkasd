@@ -469,10 +469,23 @@ const input = document.querySelector('input[type="text"]');
   const button = document.querySelector('button');
   const messages = document.querySelector('.messages');
 
+  // Connect to the WebSocket server
+  const socket = new WebSocket('ws://localhost:3000');
+
+  // Listen for messages from the server
+  socket.addEventListener('message', (event) => {
+    const message = JSON.parse(event.data);
+
+    const newMessage = document.createElement('div');
+    newMessage.classList.add('message');
+    newMessage.textContent = message.text;
+    messages.appendChild(newMessage);
+  });
+
   button.addEventListener('click', sendMessage);
   input.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
-      event.preventDefault(); // Prevent form submission
+      event.preventDefault();
       sendMessage();
     }
   });
@@ -481,17 +494,17 @@ const input = document.querySelector('input[type="text"]');
     const message = input.value.trim();
 
     if (message.length) {
+      // Send the message to the server
+      socket.send(JSON.stringify({ text: message }));
+
       const newMessage = document.createElement('div');
       newMessage.classList.add('message');
       newMessage.textContent = message;
       messages.appendChild(newMessage);
+
       input.value = '';
     }
   }
-  
-  // Listen for input events and send the message to the server
-  input.addEventListener('input', sendMessage);
-  button.addEventListener('click', sendMessage);
 
               const Signin = document.querySelector('.Signin');
               
